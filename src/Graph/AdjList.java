@@ -92,17 +92,6 @@ public class AdjList extends AbstractGraph {
     }
 
     @Override
-    public Edge isExistE(int v1, int v2) {
-        if (isExistV(v1) != null && isExistV(v2) != null) {
-            Integer i = adjList.get(v1).way.get(v2);
-
-            return i == null ? null : new Edge(v1, v2, i.intValue());
-        }
-        return null;
-    }
-
-
-    @Override
     public void clear() {
         adjList = new HashMap < Integer, Vertex > ();
     }
