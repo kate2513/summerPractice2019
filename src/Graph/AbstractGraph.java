@@ -5,6 +5,10 @@ import java.util.HashMap;
 
 public abstract class AbstractGraph {
 
+    abstract public void readGraph();
+
+    abstract public void showGraph();
+
     abstract public boolean addVertex(int v);
 
     abstract public boolean addEdge(Edge e);
@@ -19,9 +23,9 @@ public abstract class AbstractGraph {
 
     abstract public void clear();
 
-    abstract public ArrayList<Integer> getVertexes();
+    abstract public ArrayList < Integer > getVertexes();
 
-    abstract public ArrayList<Edge> getEdges();
+    abstract public ArrayList < Edge > getEdges();
 
     public static class Edge {
         public Edge(int v1, int v2, int weight) {
@@ -30,19 +34,18 @@ public abstract class AbstractGraph {
             this.weight = weight;
         }
 
-    @Override
-    public boolean equals(Object other)
-    {
-        if (!(other instanceof Edge))
+        @Override
+        public boolean equals(Object other) {
+            if (!(other instanceof Edge))
                 return false;
 
-        Edge edge = (Edge)other;
+            Edge edge = (Edge) other;
 
-        if (edge.v1 == this.v1 && edge.v2 == this.v2 && edge.weight == this.weight)
+            if (edge.v1 == this.v1 && edge.v2 == this.v2 && edge.weight == this.weight)
                 return true;
-        else
+            else
                 return false;
-    }
+        }
 
 
         public int v1;
@@ -51,7 +54,7 @@ public abstract class AbstractGraph {
     }
     public static class Vertex {
         public int v;
-        public HashMap<Integer,Integer> way = new HashMap<Integer,Integer>();
+        public HashMap < Integer, Integer > way = new HashMap < Integer, Integer > ();
 
         public Vertex(int v) {
             this.v = v;

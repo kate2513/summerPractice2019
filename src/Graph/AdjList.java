@@ -8,39 +8,34 @@ import java.util.Scanner;
 // Представление в виде списка смежности
 public class AdjList extends AbstractGraph {
 
-    private HashMap<Integer, Vertex> adjList = new HashMap<Integer, Vertex>();
+    private HashMap < Integer, Vertex > adjList = new HashMap < Integer, Vertex > ();
 
     // кривовато
-    public void readGraph()
-    {
-	Integer v1=0, v2=0, weight=0;
+    public void readGraph() {
+        Integer v1 = 0, v2 = 0, weight = 0;
 
-	Scanner scan = new Scanner(System.in).useDelimiter("\\s");
+        Scanner scan = new Scanner(System.in).useDelimiter("\\s");
 
-	while (scan.hasNextInt())
-	{
-		if (scan.hasNextInt())
-			v1 = scan.nextInt();
-		if (scan.hasNextInt())
-			v2 = scan.nextInt();
-		if (scan.hasNextInt())
-			weight = scan.nextInt();
+        while (scan.hasNextInt()) {
+            if (scan.hasNextInt())
+                v1 = scan.nextInt();
+            if (scan.hasNextInt())
+                v2 = scan.nextInt();
+            if (scan.hasNextInt())
+                weight = scan.nextInt();
 
-		addEdge(new Edge(v1, v2, weight));
-	}
+            addEdge(new Edge(v1, v2, weight));
+        }
     }
 
-    public void showGraph()
-    {
+    public void showGraph() {
 
-	for (Vertex vert : adjList.values())
-	{
-		System.out.println("vertex: " + vert.v);
-		for (Integer neighbour : vert.way.keySet())
-		{
-			System.out.println("[neighbour: " + neighbour + ", edge: " + vert.way.get(neighbour) + "]");
-		}
-	}
+        for (Vertex vert: adjList.values()) {
+            System.out.println("vertex: " + vert.v);
+            for (Integer neighbour: vert.way.keySet()) {
+                System.out.println("[neighbour: " + neighbour + ", edge: " + vert.way.get(neighbour) + "]");
+            }
+        }
     }
 
     @Override
@@ -54,17 +49,15 @@ public class AdjList extends AbstractGraph {
     @Override
     public boolean addEdge(Edge e) {
 
-        if ( !adjList.containsKey(e.v1) )
-	{
-		addVertex(e.v1);
-	}
+        if (!adjList.containsKey(e.v1)) {
+            addVertex(e.v1);
+        }
 
-        if ( !adjList.containsKey(e.v2) )
-	{
-		addVertex(e.v2);
-	}
+        if (!adjList.containsKey(e.v2)) {
+            addVertex(e.v2);
+        }
 
-        if ( adjList.get(e.v1).way.containsKey(e.v2)) return false;
+        if (adjList.get(e.v1).way.containsKey(e.v2)) return false;
 
         adjList.get(e.v1).way.put(e.v2, e.weight);
         adjList.get(e.v2).way.put(e.v1, e.weight);
@@ -83,9 +76,9 @@ public class AdjList extends AbstractGraph {
     @Override
     public boolean removeEdge(Edge e) {
 
-        if ( !adjList.containsKey(e.v1) ) return false;
-        if ( !adjList.containsKey(e.v2) ) return false;
-        if ( !adjList.get(e.v1).way.containsKey(e.v2)) return false;
+        if (!adjList.containsKey(e.v1)) return false;
+        if (!adjList.containsKey(e.v2)) return false;
+        if (!adjList.get(e.v1).way.containsKey(e.v2)) return false;
 
         adjList.get(e.v1).way.remove(e.v2);
         adjList.get(e.v2).way.remove(e.v1);
@@ -100,10 +93,10 @@ public class AdjList extends AbstractGraph {
 
     @Override
     public Edge isExistE(int v1, int v2) {
-        if (isExistV(v1)!=null && isExistV(v2)!=null) {
+        if (isExistV(v1) != null && isExistV(v2) != null) {
             Integer i = adjList.get(v1).way.get(v2);
 
-            return i==null ? null : new Edge(v1,v2,i.intValue());
+            return i == null ? null : new Edge(v1, v2, i.intValue());
         }
         return null;
     }
@@ -111,14 +104,14 @@ public class AdjList extends AbstractGraph {
 
     @Override
     public void clear() {
-        adjList = new HashMap<Integer, Vertex>();
+        adjList = new HashMap < Integer, Vertex > ();
     }
 
     @Override
-    public ArrayList<Integer> getVertexes() {
-        ArrayList<Integer> verts = new ArrayList<Integer>();
+    public ArrayList < Integer > getVertexes() {
+        ArrayList < Integer > verts = new ArrayList < Integer > ();
 
-        for(Integer vert: adjList.keySet()) {
+        for (Integer vert: adjList.keySet()) {
             verts.add(vert);
         }
 
@@ -126,23 +119,20 @@ public class AdjList extends AbstractGraph {
     }
 
     @Override
-    public ArrayList<Edge> getEdges() {
-	ArrayList<Edge> edges = new ArrayList<Edge>();
+    public ArrayList < Edge > getEdges() {
+        ArrayList < Edge > edges = new ArrayList < Edge > ();
 
-	for(Vertex vert : adjList.values())
-	{
-		for (Map.Entry edge : vert.way.entrySet())
-		{
-			Edge isDuple = new Edge((int)edge.getKey(), vert.v, (int)edge.getValue());
+        for (Vertex vert: adjList.values()) {
+            for (Map.Entry edge: vert.way.entrySet()) {
+                Edge isDuple = new Edge((int) edge.getKey(), vert.v, (int) edge.getValue());
 
-			if (!edges.contains(isDuple))
-			{
-				edges.add(new Edge(vert.v, (int)edge.getKey(), (int)edge.getValue()));
-			}
-		}
-	}
+                if (!edges.contains(isDuple)) {
+                    edges.add(new Edge(vert.v, (int) edge.getKey(), (int) edge.getValue()));
+                }
+            }
+        }
 
-	return edges;
+        return edges;
 
     }
 }
