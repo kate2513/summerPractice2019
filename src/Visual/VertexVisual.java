@@ -12,7 +12,7 @@ class VertexVisual{
 	VertexVisual(Ellipse2D ellipse){
 		edges = new ArrayList<WeightEdge>();
 		vertex = ellipse;
-		System.out.println(""+vertex.getX()+" "+vertex.getY());
-		System.out.println(edges.size());
+//		System.out.println(""+vertex.getX()+" "+vertex.getY());
+//		System.out.println(edges.size());
 	}
 }
