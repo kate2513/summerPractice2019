@@ -1,8 +1,13 @@
+package Initialization;
+
+import Graph.*;
+import VisualGraph.*;
 import java.awt.*;
 import java.awt.geom.*;
 import javax.swing.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+
 
 public class Initializer{
 	private JFrame mainFrame;
@@ -12,15 +17,15 @@ public class Initializer{
 	private JButton buttonFile;
 	private static int way;
 	private boolean ready;
+	private ArrayList<Point> coords;
 
 	
-	Initializer(JFrame mainFrame) {
+	public Initializer(JFrame mainFrame) {
 		this.mainFrame = mainFrame;
 	}
 	//1 - from window, 2 - from file
 	public void findOutWhatWay(){
 		ready=false;
-		mainFrame.setLayout(new FlowLayout(FlowLayout.CENTER));
 		
 		hello = new JLabel("CHOOSE YOUR WAY TO DRAW GRAPH:");
 		mainFrame.add(hello);
@@ -40,13 +45,53 @@ public class Initializer{
 		mainFrame.revalidate();
 	
 	}
+//будет не void	
+	public AbstractGraph getData(){
+		//все убрать
+		mainFrame.getContentPane().removeAll();
+		mainFrame.repaint();
+		
+		if (way == 1) return getDataFromDraw();
+//		if (way == 2) getDataFromFile();
+		else return getDataFromDraw();
+	}
 	
-	int getWay(){
+	private AbstractGraph getDataFromDraw(){
+		
+		mainFrame.setLayout(new BorderLayout());
+		DrawingPanel drawingPanel = new DrawingPanel();
+		mainFrame.add(drawingPanel,BorderLayout.WEST);
+/*		
+		JPanel eastPanel = new JPanel();
+		eastPanel.setPreferredSize(new Dimension(400, 500));
+		mainFrame.add(eastPanel, BorderLayout.EAST);
+*/
+		mainFrame.revalidate();
+		
+		while(!drawingPanel.isReady()){
+			System.out.print("");
+			if (drawingPanel.isReady()){
+				break;
+			}
+		}
+		drawingPanel.removeMouseListener(drawingPanel.getMouseListeners()[0]);
+		
+		coords = new ArrayList<Point>();
+		coords = drawingPanel.getCoordinates();
+		return drawingPanel.getGraph();
+		
+	}
+	
+	public int getWay(){
 		return way;
 	}
 	
 	public boolean isReady(){
 		return ready;
+	}
+	
+	public ArrayList<Point> getCoordinates(){
+		return coords;
 	}
 	
 	class ButtonDrawListener implements ActionListener {
