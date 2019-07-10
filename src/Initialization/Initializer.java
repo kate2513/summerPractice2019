@@ -6,7 +6,7 @@ import java.awt.*;
 import java.awt.geom.*;
 import javax.swing.*;
 import java.awt.event.*;
-import java.util.ArrayList;
+import java.util.*;
 
 
 public class Initializer{
@@ -15,9 +15,12 @@ public class Initializer{
 	private JPanel buttonPanel;
 	private JButton buttonDraw;
 	private JButton buttonFile;
+	private JTextField textField;
+	private String name;
 	private static int way;
 	private boolean ready;
-	private ArrayList<Point> coords;
+	private HashMap<Integer,Point> coords;
+	private AbstractGraph graph;
 
 	
 	public Initializer(JFrame mainFrame) {
@@ -52,8 +55,7 @@ public class Initializer{
 		mainFrame.repaint();
 		
 		if (way == 1) return getDataFromDraw();
-//		if (way == 2) getDataFromFile();
-		else return getDataFromDraw();
+		else return getDataFromFile();
 	}
 	
 	private AbstractGraph getDataFromDraw(){
@@ -76,10 +78,60 @@ public class Initializer{
 		}
 		drawingPanel.removeMouseListener(drawingPanel.getMouseListeners()[0]);
 		
-		coords = new ArrayList<Point>();
+		coords = new HashMap<Integer,Point>();
 		coords = drawingPanel.getCoordinates();
 		return drawingPanel.getGraph();
+	}
+	
+	private AbstractGraph getDataFromFile(){
 		
+		ready = false;
+		mainFrame.setLayout(new FlowLayout());
+		
+		hello = new JLabel("Write the name of your file and push enter:");
+		mainFrame.add(hello);
+		
+		buttonPanel = new JPanel();
+		buttonPanel.setLayout(new FlowLayout());
+		mainFrame.add(buttonPanel);
+		
+		textField = new JTextField("input.txt");
+		textField.setPreferredSize(new Dimension(200, 30));
+		textField.addActionListener(new ActionListener() {
+								public void actionPerformed(ActionEvent e) {
+									name=textField.getText();
+									ready=true;
+								}
+							});
+		textField.requestFocusInWindow();
+		buttonPanel.add(textField);
+		mainFrame.revalidate();
+		while(!ready){
+			System.out.print("");
+			if (ready){
+				break;
+			}
+		}
+		mainFrame.getContentPane().removeAll();
+		mainFrame.repaint();
+		System.out.println(name);
+		
+		graph = new AdjList();
+		graph.readFile(name);
+		
+		mainFrame.setLayout(new BorderLayout());
+		SetAndDrawPanel drawingPanel = new SetAndDrawPanel(graph);
+		mainFrame.add(drawingPanel,BorderLayout.WEST);
+		
+/*		
+		JPanel eastPanel = new JPanel();
+		eastPanel.setPreferredSize(new Dimension(400, 500));
+		mainFrame.add(eastPanel, BorderLayout.EAST);
+*/
+		mainFrame.revalidate();
+		
+		coords = drawingPanel.getCoordinates();
+		return graph;
 	}
 	
 	public int getWay(){
@@ -90,9 +142,10 @@ public class Initializer{
 		return ready;
 	}
 	
-	public ArrayList<Point> getCoordinates(){
+	public HashMap<Integer,Point> getCoordinates(){
 		return coords;
 	}
+
 	
 	class ButtonDrawListener implements ActionListener {
         public synchronized void actionPerformed(ActionEvent e) {

@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.geom.*;
 import javax.swing.*;
 import java.awt.event.*;
-import java.util.ArrayList;
+import java.util.*;
 
 public class Sender{
 	private static final int DEFAULT_WIDTH = 820;	//
@@ -18,7 +18,7 @@ public class Sender{
 	private static Initializer init;
 	
 	private AbstractGraph graph;
-	private ArrayList<Point> coords;
+	private HashMap<Integer,Point> coords;
 	
 	private Boruvki algorithm;
 	private ArrayList<AbstractGraph> states;
@@ -56,10 +56,9 @@ public class Sender{
 		graph = init.getData();
 		
 		//получение координат
-		if (init.getWay() ==1){
-			coords = new ArrayList<Point>();
-			coords = init.getCoordinates();
-		}
+		coords = new HashMap<Integer,Point>();
+		coords = init.getCoordinates();
+		System.out.println(coords.toString());
 		
 		graph.showGraph();
 		
@@ -70,9 +69,8 @@ public class Sender{
 		
 		//показ шагов алгоритма
 		presenter = new Presenter(mainFrame);
-		if (init.getWay() == 1){
-			presenter.showSteps(states,coords);
-		}
+		
+		presenter.showSteps(states,coords);
 		
 	}
 }

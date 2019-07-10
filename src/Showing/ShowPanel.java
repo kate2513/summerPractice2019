@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.geom.*;
 import javax.swing.*;
 import java.awt.event.*;
-import java.util.ArrayList;
+import java.util.*;
 
 public class ShowPanel extends JPanel{
 	
@@ -13,11 +13,11 @@ public class ShowPanel extends JPanel{
 	private JButton backButton;
 	private JButton nextButton;
 	private ArrayList<AbstractGraph> states;
-	private ArrayList<Point> coords;
+	private HashMap<Integer,Point> coords;
 	private AbstractGraph current;
 	private int step = 1;
 	
-	ShowPanel(ArrayList<AbstractGraph> states, ArrayList<Point> coords){
+	ShowPanel(ArrayList<AbstractGraph> states, HashMap<Integer,Point> coords){
 		//null чтобы рисовать в любой точке панели
 		setLayout(null);
 		//указание требуемого размера панели
@@ -39,7 +39,7 @@ public class ShowPanel extends JPanel{
 		add(nextButton);
 		
 		this.states = new ArrayList<AbstractGraph>();
-		this.coords = new ArrayList<Point>();
+		this.coords = new HashMap<Integer,Point>();
 		
 		this.states = states;
 		this.coords = coords;
@@ -50,15 +50,21 @@ public class ShowPanel extends JPanel{
 	
 	
 	protected void paintComponent(Graphics g){
+		System.out.println("Painting");
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D)g;
 		
 		g2.clearRect(0, 0, getWidth(), getHeight());
 		g2.setFont(new Font("Calibri", Font.PLAIN, 12));
-		
+		Point point = new Point();
+		System.out.println(current.getVertexes().toString());
+		System.out.println(coords.toString());
 		for (Integer r : current.getVertexes()){
-			g2.drawString(""+(r.intValue()+1),coords.get(r.intValue()).x,coords.get(r.intValue()).y);
-			g2.draw(new Ellipse2D.Double(coords.get(r.intValue()).x,coords.get(r.intValue()).y,20,20));
+			point = coords.get(new Integer(r.intValue()));
+			if (point == null) System.out.println("Null pointer");
+			System.out.println(""+point.x+" "+point.y);
+			g2.drawString(""+(r.intValue()),coords.get(r).x,coords.get(r).y);
+			g2.draw(new Ellipse2D.Double(coords.get(r).x,coords.get(r).y,20,20));
 		}
 		g2.setFont(new Font("Calibri", Font.BOLD, 14));
 		g2.drawString("Step "+step,getWidth()/2-80,40);

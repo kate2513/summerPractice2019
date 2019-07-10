@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.geom.*;
 import javax.swing.*;
 import java.awt.event.*;
-import java.util.ArrayList;
+import java.util.*;
 import Graph.*;
 import VisualGraph.*;
 
@@ -91,7 +91,7 @@ public class DrawingPanel extends JPanel{
 	}
 	
 	private int getIndex(Ellipse2D vertex){
-		int i=0;
+		int i=1;
 		for (VertexVisual r : verts){
 			if (r.vertex == vertex)
 				return i;
@@ -101,7 +101,7 @@ public class DrawingPanel extends JPanel{
 	}
 	
 	public AbstractGraph getGraph(){
-		int from=0;
+		int from=1;
 		int to=0;
 		AbstractGraph graph = new AdjList();
 		for (VertexVisual r : verts){
@@ -115,10 +115,11 @@ public class DrawingPanel extends JPanel{
 		
 	}
 	
-	public ArrayList<Point> getCoordinates(){
-		ArrayList<Point> coords = new ArrayList<Point>();
+	public HashMap<Integer,Point> getCoordinates(){
+		HashMap<Integer,Point> coords = new HashMap<Integer,Point>();
+		int i=1;
 		for (VertexVisual r : verts){
-			coords.add(new Point((int)(r.vertex.getX()),(int)(r.vertex.getY())));
+			coords.put(new Integer(i++),new Point((int)(r.vertex.getX()),(int)(r.vertex.getY())));
 		}
 		return coords;
 	}

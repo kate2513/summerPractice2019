@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.geom.*;
 import javax.swing.*;
 import java.awt.event.*;
-import java.util.ArrayList;
+import java.util.*;
 
 public class Presenter{
 	
@@ -16,15 +16,13 @@ public class Presenter{
 		this.mainFrame = mainFrame;
 	}
 	
-	public void showSteps(ArrayList<AbstractGraph> states, ArrayList<Point> coords){
+	public void showSteps(ArrayList<AbstractGraph> states, HashMap<Integer,Point> coords){
+		System.out.println(coords.toString());
 		showPanel = new ShowPanel(states,coords);
 		mainFrame.add(showPanel, BorderLayout.EAST);
 		showPanel.repaint();
 		mainFrame.revalidate();
 		
-	}
-	
-	public void showSteps(ArrayList<AbstractGraph> states){
 	}
 	
 }
