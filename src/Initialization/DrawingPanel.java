@@ -15,38 +15,48 @@ public class DrawingPanel extends JPanel{
 	private JLabel error;
 	private JLabel help;
 	private JButton readyButton;
+	private JButton restartButton;
+	private JTextField textField;
 	private VertexVisual current;
 	private VertexVisual temp;
 	private ArrayList<VertexVisual> verts;
 	private boolean ready; 
 	private int paintVertex;
+	private boolean isTextFieldSet;
 	
 	
-	DrawingPanel(){
+	DrawingPanel(int frameWidth, int frameHeight){
 		//null чтобы рисовать в любой точке панели
 		setLayout(null);
 		//указание требуемого размера панели
-		setPreferredSize(new Dimension(400, 500));
+		setPreferredSize(new Dimension(frameWidth/2 - 10, frameHeight));
 		//нарисовать границу
 		setBorder(BorderFactory.createEtchedBorder());
 		verts = new ArrayList<VertexVisual>();
 		current = null;
 		addMouseListener(new GraphMouseListener());
 		label = new JLabel("Draw your graph here:");
-		label.setBounds(120,10,200,15);
+		label.setBounds(getPreferredSize().width/2-100,10,200,15);
 		add(label);
 		error = new JLabel("");
-		error.setBounds(100,25,300,15);
+		error.setBounds(getPreferredSize().width/2-100,25,300,15);
 		add(error);
 		
         help = new JLabel("<html>Mouse clicks:\nLeft = new vertex.\nDouble left = delete vertex.\nRight click on two vertexes = edge.\n</html>");
-		help.setBounds(30,400,200,60);
+		help.setBounds(10,getPreferredSize().height-100,200,60);
 		add(help);
 		
 		readyButton = new JButton("OK");
-		readyButton.setBounds(320,420,70,30);
+		readyButton.setBounds(getPreferredSize().width-100,getPreferredSize().height-80,90,30);
 		readyButton.addActionListener(new ButtonReadyListener());
 		add(readyButton);
+		
+		restartButton = new JButton("Restart");
+		restartButton.setBounds(getPreferredSize().width-100,getPreferredSize().height-110,90,30);
+		restartButton.addActionListener(new ButtonRestartListener());
+		add(restartButton);
+		
+		isTextFieldSet = false;
 		
 	}
 		
@@ -105,6 +115,7 @@ public class DrawingPanel extends JPanel{
 		int to=0;
 		AbstractGraph graph = new AdjList();
 		for (VertexVisual r : verts){
+			graph.addVertex(from);
 			for (WeightEdge z : r.edges){
 					to = getIndex(z.vert);
 					graph.addEdge(new Edge(from,to,z.weight));
@@ -138,23 +149,48 @@ public class DrawingPanel extends JPanel{
 	
 	class ButtonReadyListener implements ActionListener {
         public synchronized void actionPerformed(ActionEvent e) {
-			ready = true;
+			if (!isTextFieldSet){
+				try{
+					remove(restartButton);
+					remove(textField);
+				} catch (java.lang.NullPointerException exc){
+				}
+				error.setText("");
+				paintVertex = 0;
+				revalidate();
+				repaint();
+				ready = true;
+			}
+        }
+    }
+	
+	class ButtonRestartListener implements ActionListener {
+        public synchronized void actionPerformed(ActionEvent e) {
+			temp = null;
+			current = null;
+			verts.clear();
+			isTextFieldSet = false;
+			error.setText("");
+			paintVertex = 0;
+			remove(textField);
+			revalidate();
+			repaint();
         }
     }
 	
 	class GraphMouseListener extends MouseAdapter{
 		@Override
 		public void mouseClicked(MouseEvent e){
-				temp = null;
-				
+			if (!isTextFieldSet){	
 				//ЛКМ
+			
 				if(e.getButton()==MouseEvent.BUTTON1){
 					error.setText("");
 					revalidate();
 					if (current != null){
-//						setChosen(0);
-//						repaint();
+						paintVertex =0;
 						current = null;
+						repaint();
 					}
 					//выход, если нельзя поставить точку
 					temp=find(e.getX(),e.getY());
@@ -188,7 +224,7 @@ public class DrawingPanel extends JPanel{
 					if (current==null){
 						current = find(e.getX(),e.getY());
 						//окрасить выбранную вершину
-						paintVertex = 1+getIndex(current.vertex);
+						paintVertex = getIndex(current.vertex);
 //						System.out.println("paintIndex = "+(1+getIndex(current.vertex)));
 						repaint();
 					} else{
@@ -202,14 +238,16 @@ public class DrawingPanel extends JPanel{
 							return;
 						}
 						if (temp != null){
-							JTextField textField = new JTextField();
+							textField = new JTextField();
 							textField.setSize(50,20);
 							textField.setLocation(e.getX(),e.getY());
 							add(textField);
+							isTextFieldSet = true;
 							textField.addActionListener(new ActionListener() {
 								public void actionPerformed(ActionEvent e) {
 									try{
 										weight=Integer.parseInt(textField.getText());
+										isTextFieldSet = false;
 									} catch (NumberFormatException exception){
 										temp = null;
 										error.setText("ERROR! WEIGHT = NUMBER!");
@@ -233,6 +271,7 @@ public class DrawingPanel extends JPanel{
 						}
 					}
 				}
+			}
 		}
 	}
 

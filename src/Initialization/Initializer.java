@@ -61,7 +61,7 @@ public class Initializer{
 	private AbstractGraph getDataFromDraw(){
 		
 		mainFrame.setLayout(new BorderLayout());
-		DrawingPanel drawingPanel = new DrawingPanel();
+		DrawingPanel drawingPanel = new DrawingPanel(mainFrame.getWidth(),mainFrame.getHeight());
 		mainFrame.add(drawingPanel,BorderLayout.WEST);
 /*		
 		JPanel eastPanel = new JPanel();
@@ -120,7 +120,7 @@ public class Initializer{
 		graph.readFile(name);
 		
 		mainFrame.setLayout(new BorderLayout());
-		SetAndDrawPanel drawingPanel = new SetAndDrawPanel(graph);
+		SetAndDrawPanel drawingPanel = new SetAndDrawPanel(graph,mainFrame.getWidth(),mainFrame.getHeight());
 		mainFrame.add(drawingPanel,BorderLayout.WEST);
 		
 /*		

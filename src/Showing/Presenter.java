@@ -16,9 +16,9 @@ public class Presenter{
 		this.mainFrame = mainFrame;
 	}
 	
-	public void showSteps(ArrayList<AbstractGraph> states, HashMap<Integer,Point> coords){
+	public void showSteps(ArrayList<AbstractGraph> states, HashMap<Integer,Point> coords, ArrayList<String> stringLogs){
 		System.out.println(coords.toString());
-		showPanel = new ShowPanel(states,coords);
+		showPanel = new ShowPanel(states,coords,mainFrame.getWidth(),mainFrame.getHeight(),stringLogs);
 		mainFrame.add(showPanel, BorderLayout.EAST);
 		showPanel.repaint();
 		mainFrame.revalidate();

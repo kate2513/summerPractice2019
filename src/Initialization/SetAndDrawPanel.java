@@ -11,7 +11,7 @@ import java.util.concurrent.*;
 
 import edu.uci.ics.jung.graph.UndirectedSparseGraph;
 import edu.uci.ics.jung.visualization.VisualizationImageServer;
-import edu.uci.ics.jung.algorithms.layout.ISOMLayout;
+import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 
 public class SetAndDrawPanel extends JPanel{
 	
@@ -19,12 +19,12 @@ public class SetAndDrawPanel extends JPanel{
 	private AbstractGraph graph;
 	private HashMap<Integer,Point> coords;
 	
-	public SetAndDrawPanel(AbstractGraph graph){
+	public SetAndDrawPanel(AbstractGraph graph, int frameWidth, int frameHeight){
 		this.graph = graph;
 		setLayout(null);
-		setPreferredSize(new Dimension(400, 500));
+		setPreferredSize(new Dimension(frameWidth/2 - 10, frameHeight));
 		label = new JLabel("Your graph:");
-		label.setBounds(120,10,200,15);
+		label.setBounds(getPreferredSize().width/2-100,10,200,15);
 		add(label);
 		setCoordinates();
 	}
@@ -68,7 +68,7 @@ public class SetAndDrawPanel extends JPanel{
 			g.addEdge(i++,r.v1,r.v2);
 		}
 		MyLayout layout = new MyLayout(g);
-		VisualizationImageServer vs = new VisualizationImageServer(layout, new Dimension(400, 400));
+		VisualizationImageServer vs = new VisualizationImageServer(layout, new Dimension(getPreferredSize().width, getPreferredSize().height-150));
 		com.google.common.cache.LoadingCache location = layout.getLocation();
 		
 		coords = new HashMap<Integer,Point>();
@@ -76,7 +76,7 @@ public class SetAndDrawPanel extends JPanel{
 		try{
 			for (Integer r : graph.getVertexes()){
 				point = (Point2D.Double)location.get(r.intValue());
-				coords.put(new Integer(r.intValue()), new Point((int)(point.getX()),(int)(point.getY())+100));
+				coords.put(new Integer(r.intValue()), new Point((int)(point.getX()),(int)(point.getY())+50));
 			}
 		} catch(ExecutionException e) {
 		}
@@ -88,7 +88,7 @@ public class SetAndDrawPanel extends JPanel{
 		return coords;
 	}
 	
-	public class MyLayout<V,E> extends ISOMLayout<V,E>{
+	public class MyLayout<V,E> extends CircleLayout<V,E>{
 	  
 	  public MyLayout(edu.uci.ics.jung.graph.Graph<V,E> g){
 		super(g);

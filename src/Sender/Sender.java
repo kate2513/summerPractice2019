@@ -12,8 +12,8 @@ import java.awt.event.*;
 import java.util.*;
 
 public class Sender{
-	private static final int DEFAULT_WIDTH = 820;	//
-	private static final int DEFAULT_HEIGHT = 500;	//
+	private int DEFAULT_WIDTH = 1000;	//
+	private int DEFAULT_HEIGHT = 700;	//
 	private JFrame mainFrame;
 	private static Initializer init;
 	
@@ -22,6 +22,7 @@ public class Sender{
 	
 	private Boruvki algorithm;
 	private ArrayList<AbstractGraph> states;
+	private ArrayList<String> stringsLogs;
 	
 	private Presenter presenter;
 	
@@ -33,14 +34,21 @@ public class Sender{
 
 	
 	public void running(){
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		DEFAULT_WIDTH = (int)screenSize.getWidth()-200;
+		DEFAULT_HEIGHT = (int)screenSize.getHeight()-200;
 		//содание окна
 		mainFrame = new JFrame();
-		mainFrame.setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);	
-		mainFrame.setTitle("New Window");
+		mainFrame.setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+		mainFrame.setMinimumSize(new Dimension(DEFAULT_WIDTH,DEFAULT_HEIGHT));
+		mainFrame.setMaximumSize(new Dimension(DEFAULT_WIDTH,DEFAULT_HEIGHT));
+		mainFrame.setPreferredSize(new Dimension(DEFAULT_WIDTH,DEFAULT_HEIGHT));
+		mainFrame.setTitle("Boruvki Algorithm made by Golovina, Deryabina, Chigaleychik");
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.setLocationRelativeTo(null);
 		mainFrame.setVisible(true);
 		mainFrame.setLayout(new FlowLayout(FlowLayout.CENTER));
+		mainFrame.setResizable(false);
 		
 		//инициализация
 		init = new Initializer(mainFrame);
@@ -65,12 +73,12 @@ public class Sender{
 		//запуск алгоритма с сохранением состояний
 		algorithm = new Boruvki(graph);
 		states = new ArrayList<AbstractGraph>();
-		states = algorithm.boruvki();
+		stringsLogs = new ArrayList <String>();
+		states = algorithm.boruvki(stringsLogs);
 		
 		//показ шагов алгоритма
 		presenter = new Presenter(mainFrame);
-		
-		presenter.showSteps(states,coords);
+		presenter.showSteps(states,coords,stringsLogs);
 		
 	}
 }

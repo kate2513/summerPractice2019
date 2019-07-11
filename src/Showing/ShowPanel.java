@@ -12,30 +12,54 @@ public class ShowPanel extends JPanel{
 	private JLabel label;
 	private JButton backButton;
 	private JButton nextButton;
+	private JButton finishButton;
+	private JTextArea logs;
+	private JScrollPane scroll;
 	private ArrayList<AbstractGraph> states;
+	private ArrayList<String> stringLogs;
 	private HashMap<Integer,Point> coords;
 	private AbstractGraph current;
+	private StringBuilder string;
 	private int step = 1;
 	
-	ShowPanel(ArrayList<AbstractGraph> states, HashMap<Integer,Point> coords){
+	ShowPanel(ArrayList<AbstractGraph> states, HashMap<Integer,Point> coords,int frameWidth,int frameHeight,ArrayList<String> stringLogs){
 		//null чтобы рисовать в любой точке панели
 		setLayout(null);
 		//указание требуемого размера панели
-		setPreferredSize(new Dimension(400, 500));
+		setPreferredSize(new Dimension(frameWidth/2 - 10, frameHeight));
 		
-		label = new JLabel("Steps of the Boruvki Algorithm:");
-		label.setBounds(120,10,200,15);
-		add(label);
+		this.stringLogs = stringLogs;
+//		
+	//	string = new StringBuilder();
+
+		if (states != null)
+		{
+			label = new JLabel("Steps of the Boruvki Algorithm:");
+			label.setBounds(getPreferredSize().width/2-100,10,250,15);
+			add(label);
+		}
+		else
+		{
+			label = new JLabel("Wrong input!");
+			label.setBounds(getPreferredSize().width/2-100,10,250,15);
+			add(label);
+			return;
+		}
+//		
 		
 		backButton = new JButton("Back");
-		backButton.setBounds(5,420,70,30);
+		backButton.setBounds(5,getPreferredSize().height-80,70,30);
 		backButton.addActionListener(new ButtonBackListener());
-//		System.out.println("add button");
 		add(backButton);
 		
 		nextButton = new JButton("Next");
-		nextButton.setBounds(320,420,70,30);
+		nextButton.setBounds(getPreferredSize().width-180,getPreferredSize().height-80,70,30);
 		nextButton.addActionListener(new ButtonNextListener());
+		add(nextButton);
+		
+		nextButton = new JButton("Finish");
+		nextButton.setBounds(getPreferredSize().width-100,getPreferredSize().height-80,70,30);
+		nextButton.addActionListener(new ButtonFinishListener());
 		add(nextButton);
 		
 		this.states = new ArrayList<AbstractGraph>();
@@ -46,6 +70,17 @@ public class ShowPanel extends JPanel{
 		
 		current = states.get(step);
 		
+		logs = new JTextArea(15,10);
+		logs.setLineWrap(true);
+        logs.setWrapStyleWord(true);
+		logs.setEditable(false);
+		logs.setText("hello");
+		logs.setCaretPosition(0);
+		
+		scroll = new JScrollPane(logs);
+		scroll.setBounds(100,getPreferredSize().height-80,getPreferredSize().width-180-100-10,40);
+		add(scroll);
+		
 	}
 	
 	
@@ -54,7 +89,39 @@ public class ShowPanel extends JPanel{
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D)g;
 		
+		if (current == null)
+		{
+			return;
+		}
+		
+		
 		g2.clearRect(0, 0, getWidth(), getHeight());
+/*		
+		if (step == 1){
+			string = new StringBuilder("Шаг №"+step+". ");
+			string.append("Каждая вершина - отдельная компонента связности. ");
+			string.append("На данном шаге добавлены вершины: ");
+			for (Integer r : current.getVertexes()){
+				string.append("("+r.intValue()+") ");
+			}
+			logs.setText(string.toString());
+		}
+		else if (step==2){
+			string = new StringBuilder("Шаг №"+step+". ");
+			string.append("Добавлены ребра:\n");
+			for (Edge r : current.getEdges()){
+				string.append("("+r.v1+")--"+r.weight+"--("+r.v2+")  ");
+			}
+			logs.setText(string.toString());
+		}
+		else if (step>2){
+			string = new StringBuilder("Шаг №"+step+". ");
+			string.append("Добавлены ребра: ");
+			logs.setText(string.toString());
+		}
+*/		
+		logs.setText(stringLogs.get(step-1));
+		logs.setCaretPosition(0);
 		g2.setFont(new Font("Calibri", Font.PLAIN, 12));
 		Point point = new Point();
 		System.out.println(current.getVertexes().toString());
@@ -99,6 +166,13 @@ public class ShowPanel extends JPanel{
         public synchronized void actionPerformed(ActionEvent e) {
 			if (step<states.size()-2) step++;
 			else step=states.size()-1;
+			current = states.get(step);
+			repaint();
+        }
+    }
+	class ButtonFinishListener implements ActionListener {
+        public synchronized void actionPerformed(ActionEvent e) {
+			step=states.size()-1;
 			current = states.get(step);
 			repaint();
         }
